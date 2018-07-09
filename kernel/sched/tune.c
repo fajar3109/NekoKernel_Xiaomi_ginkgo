@@ -1110,17 +1110,17 @@ int reset_stune_boost(char *st_name, int slot)
 	return ret;
 }
 
-int do_stune_sched_boost(char *st_name)
+int do_stune_sched_boost(char *st_name, int *slot)
 {
 	struct schedtune *st = getSchedtune(st_name);
 
 	if (!st)
 		return -EINVAL;
 
-	return _do_stune_boost(st, st->sched_boost);
+	return _do_stune_boost(st, st->sched_boost, slot);
 }
 
-int do_stune_boost(char *st_name, int boost)
+int do_stune_boost(char *st_name, int boost, int *slot)
 {
 	struct schedtune *st = getSchedtune(st_name);
 
