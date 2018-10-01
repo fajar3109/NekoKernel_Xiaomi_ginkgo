@@ -1,10 +1,6 @@
 /*
-<<<<<<< HEAD
- * Copyright (c) 2012-2020 The Linux Foundation. All rights reserved.
-=======
  * Copyright (c) 2012-2021 The Linux Foundation. All rights reserved.
  * Copyright (C) 2019 XiaoMi, Inc.
->>>>>>> 6e003ef73576 (staging: wlan: Import Xiaomi changes)
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
