@@ -59,8 +59,6 @@ static DEFINE_SPINLOCK(freezer_delta_lock);
 #endif
 
 #ifdef CONFIG_RTC_CLASS
-static struct wakeup_source *ws;
-
 /* rtc timer and device for setting alarm wakeups at suspend */
 static struct rtc_timer		rtctimer;
 static struct rtc_device	*rtcdev;
@@ -72,7 +70,7 @@ static void alarmtimer_triggered_func(void *p)
 
 	if (!(rtc->irq_data & RTC_AF))
 		return;
-	__pm_wakeup_event(ws, MSEC_PER_SEC / 2);
+	pm_wakeup_event(&rtc->dev, MSEC_PER_SEC / 2);
 }
 
 static struct rtc_task alarmtimer_rtc_task = {
@@ -104,7 +102,6 @@ static int alarmtimer_rtc_add_device(struct device *dev,
 {
 	unsigned long flags;
 	struct rtc_device *rtc = to_rtc_device(dev);
-	struct wakeup_source *__ws;
 	struct platform_device *pdev;
 	int ret = 0;
 
@@ -114,12 +111,13 @@ static int alarmtimer_rtc_add_device(struct device *dev,
 	if (!rtc->ops->set_alarm)
 		return -1;
 
-	__ws = wakeup_source_register("alarmtimer");
 	pdev = platform_device_register_data(dev, "alarmtimer",
 					     PLATFORM_DEVID_AUTO, NULL, 0);
+	if (!IS_ERR(pdev))
+		device_init_wakeup(&pdev->dev, true);
 
 	spin_lock_irqsave(&rtcdev_lock, flags);
-	if (__ws && !IS_ERR(pdev) && !rtcdev) {
+	if (!IS_ERR(pdev) && !rtcdev) {
 		if (!try_module_get(rtc->owner)) {
 			ret = -1;
 			goto unlock;
@@ -132,8 +130,6 @@ static int alarmtimer_rtc_add_device(struct device *dev,
 		rtcdev = rtc;
 		/* hold a reference so it doesn't go away */
 		get_device(dev);
-		ws = __ws;
-		__ws = NULL;
 		pdev = NULL;
 	} else {
 		ret = -1;
@@ -142,7 +138,6 @@ unlock:
 	spin_unlock_irqrestore(&rtcdev_lock, flags);
 
 	platform_device_unregister(pdev);
-	wakeup_source_unregister(__ws);
 
 	return ret;
 }
@@ -320,7 +315,7 @@ static int alarmtimer_suspend(struct device *dev)
 		return 0;
 
 	if (ktime_to_ns(min) < NSEC_PER_SEC / 2)
-		__pm_wakeup_event(ws, MSEC_PER_SEC / 2);
+		pm_wakeup_event(dev, MSEC_PER_SEC / 2);
 
 	trace_alarmtimer_suspend(expires, type);
 
@@ -333,7 +328,7 @@ static int alarmtimer_suspend(struct device *dev)
 	/* Set alarm, if in the past reject suspend briefly to handle */
 	ret = rtc_timer_start(rtc, &rtctimer, now, 0);
 	if (ret < 0)
-		__pm_wakeup_event(ws, MSEC_PER_SEC / 2);
+		pm_wakeup_event(dev, MSEC_PER_SEC / 2);
 	return ret;
 }
 
