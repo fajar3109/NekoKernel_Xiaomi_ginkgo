@@ -1,5 +1,5 @@
 /************************************************************************
-* Copyright (C) 2012-2019, Focaltech Systems (R)£¬All Rights Reserved.
+* Copyright (C) 2012-2019, Focaltech Systems (R)ï¿½ï¿½All Rights Reserved.
 * Copyright (C) 2019 XiaoMi, Inc.
 *
 * File Name: focaltech_test_ini.c
@@ -116,21 +116,21 @@ struct ini_ic_type ic_types[] = {
 #define TOLOWER(x) ((x) | 0x20)
 static int fts_strncmp(const char *cs, const char *ct, int count)
 {
-	u8 c1 = 0, c2 = 0;
+    u8 c1 = 0, c2 = 0;
 
-	while (count) {
-		if  ((cs == '\0') || (ct == '\0'))
-			return -1;
-		c1 = TOLOWER(*cs++);
-		c2 = TOLOWER(*ct++);
-		if (c1 != c2)
-			return c1 < c2 ? -1 : 1;
-		if (!c1)
-			break;
-		count--;
-	}
+    while (count) {
+        if  ((cs == NULL) || (ct == NULL))
+            return -1;
+        c1 = TOLOWER(*cs++);
+        c2 = TOLOWER(*ct++);
+        if (c1 != c2)
+            return c1 < c2 ? -1 : 1;
+        if (!c1)
+            break;
+        count--;
+    }
 
-	return 0;
+    return 0;
 }
 
 static int isspace(int x)
