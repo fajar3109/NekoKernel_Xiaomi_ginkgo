@@ -3031,7 +3031,7 @@ preferred_cluster(struct sched_cluster *cluster, struct task_struct *p)
 
 static inline struct sched_cluster *rq_cluster(struct rq *rq)
 {
-	return NULL;
+	return capacity_orig_of(cpu);
 }
 
 static inline u64 scale_load_to_cpu(u64 load, int cpu)
