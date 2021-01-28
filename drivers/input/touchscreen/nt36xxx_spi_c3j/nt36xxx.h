@@ -108,6 +108,23 @@ extern const uint16_t gesture_key_array[];
 //enable 'check touch vendor' feature
 #define CHECK_TOUCH_VENDOR
 
+//enable tp work feature
+#define LCT_TP_WORK_EN      1
+
+//enable tp grip area feature
+#define LCT_TP_GRIP_AREA_EN 1
+
+//enable tp usb plugin feature
+#define NVT_USB_PLUGIN 0
+
+#if NVT_USB_PLUGIN
+typedef struct touchscreen_usb_plugin_data {
+	bool valid;
+	bool usb_plugged_in;
+	void (*event_callback)(void);
+} touchscreen_usb_plugin_data_t;
+#endif
+
 //---Touch Vendor ID---
 #define TP_VENDOR_UNKNOW    0x00
 #define TP_VENDOR_TIANMA    0x01
