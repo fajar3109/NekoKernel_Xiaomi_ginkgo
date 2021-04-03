@@ -25,7 +25,13 @@
 #include "dsi_ctrl_hw.h"
 #include "dsi_parser.h"
 
+#ifdef CONFIG_KLAPSE
+#include <linux/klapse.h>
+#endif
+
 char g_lcd_id[128];
+
+
 /**
  * topology is currently defined by a set of following 3 values:
  * 1. num of layer mixers
@@ -793,9 +799,14 @@ int dsi_panel_set_backlight(struct dsi_panel *panel, u32 bl_lvl)
 		rc = -ENOTSUPP;
 	}
 
+#ifdef CONFIG_KLAPSE
+	set_rgb_slider(bl_lvl);
+#endif
+
 	rc = dsi_panel_update_backlight_externel(panel, bl_lvl);
 	return rc;
 }
+
 
 static u32 dsi_panel_get_brightness(struct dsi_backlight_config *bl)
 {
