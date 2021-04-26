@@ -62,6 +62,14 @@ static int victim_size_cmp(const void *lhs_ptr, const void *rhs_ptr)
 	return rhs->size - lhs->size;
 }
 
+static void victim_swap(void *lhs_ptr, void *rhs_ptr, int size)
+{
+	struct victim_info *lhs = (typeof(lhs))lhs_ptr;
+	struct victim_info *rhs = (typeof(rhs))rhs_ptr;
+
+	swap(*lhs, *rhs);
+}
+
 static bool vtsk_is_duplicate(int vlen, struct task_struct *vtsk)
 {
 	int i;
@@ -137,7 +145,7 @@ static unsigned long find_victims(int *vindex, unsigned short target_adj_min,
 	 */
 	if (pages_found)
 		sort(&victims[old_vindex], *vindex - old_vindex,
-		     sizeof(*victims), victim_size_cmp, NULL);
+		     sizeof(*victims), victim_cmp, victim_swap);
 
 	return pages_found;
 }
@@ -190,12 +198,14 @@ static void scan_and_kill(void)
 	/* First round of victim processing to weed out unneeded victims */
 	nr_to_kill = process_victims(nr_found);
 
-	/*
-	 * Try to kill as few of the chosen victims as possible by sorting the
-	 * chosen victims by size, which means larger victims that have a lower
-	 * adj can be killed in place of smaller victims with a high adj.
-	 */
-	sort(victims, nr_to_kill, sizeof(*victims), victim_size_cmp, NULL);
+		/*
+		 * Try to kill as few of the chosen victims as possible by
+		 * sorting the chosen victims by size, which means larger
+		 * victims that have a lower adj can be killed in place of
+		 * smaller victims with a high adj.
+		 */
+		sort(victims, nr_to_kill, sizeof(*victims), victim_cmp,
+		     victim_swap);
 
 	/* Second round of victim processing to finally select the victims */
 	nr_to_kill = process_victims(nr_to_kill);
