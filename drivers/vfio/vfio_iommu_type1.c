@@ -402,6 +402,7 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
 	down_read(&mm->mmap_sem);
 
 	vaddr = untagged_addr(vaddr);
+
 retry:
 	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
 

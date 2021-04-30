@@ -282,13 +282,6 @@ void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
 	kuid_t uid = sock_i_uid(sk);
 	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
 
-	if (inet_is_local_reserved_port(net, snum) &&
-	    !sysctl_reserved_port_bind) {
-		ret = 1;
-		goto fail_unlock;
-	}
-
-
 	if (hlist_empty(&tb->owners)) {
 		tb->fastreuse = reuse;
 		if (sk->sk_reuseport) {
