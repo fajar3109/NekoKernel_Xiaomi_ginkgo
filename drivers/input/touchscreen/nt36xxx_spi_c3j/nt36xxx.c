@@ -1955,7 +1955,7 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 #ifdef _MSM_DRM_NOTIFY_H_
 	ts->drm_notif.notifier_call = nvt_drm_notifier_callback;
 	ret = msm_drm_register_client(&ts->drm_notif);
-	if(ret) {
+	if (ret) {
 		NVT_ERR("register drm_notifier failed. ret=%d\n", ret);
 		goto err_register_drm_notif_failed;
 	}
@@ -2183,8 +2183,16 @@ static void nvt_ts_shutdown(struct spi_device *client)
 	if (ts->workqueue)
 		destroy_workqueue(ts->workqueue);
 #ifdef _MSM_DRM_NOTIFY_H_
+<<<<<<< HEAD
 	if (msm_drm_unregister_client(&ts->drm_notif))
 		NVT_ERR("Error occurred while unregistering drm_notifier.\n");
+=======
+	if ((strnstr(saved_command_line,"tianma",strlen(saved_command_line)) != NULL) || (strnstr(saved_command_line,"shenchao",strlen(saved_command_line)) != NULL)){
+		if (msm_drm_unregister_client(&ts->drm_notif))
+			NVT_ERR("Error occurred while unregistering drm_notifier.\n");
+	}
+
+>>>>>>> 4264ba942c97... touchscreen: nt36xxx_spi_c3j: Use CAF DRM notifier API
 #else
 	if (fb_unregister_client(&ts->fb_notif))
 		NVT_ERR("Error occurred while unregistering fb_notifier.\n");
@@ -2401,7 +2409,10 @@ static int nvt_drm_notifier_callback(struct notifier_block *self, unsigned long 
 			}
 		}
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4264ba942c97... touchscreen: nt36xxx_spi_c3j: Use CAF DRM notifier API
 	return 0;
 }
 #else
