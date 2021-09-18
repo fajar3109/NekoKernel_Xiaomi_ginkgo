@@ -5355,13 +5355,12 @@ void lim_send_mgmt_frame_tx(tpAniSirGlobal mac_ctx,
 #endif
 
 	sme_session_id = mb_msg->session_id;
-	if (fc->subType == SIR_MAC_MGMT_AUTH) {
-		auth_algo = *(uint16_t *)(mb_msg->data +
+	auth_algo = *(uint16_t *)(mb_msg->data +
 				sizeof(tSirMacMgmtHdr));
 		if (auth_algo == eSIR_AUTH_TYPE_SAE)
 			lim_handle_sae_auth_retry(mac_ctx, sme_session_id,
 						  mb_msg->data, msg_len);
-	}
 
 	lim_send_frame(mac_ctx, sme_session_id, mb_msg->data, msg_len);
 }
+
