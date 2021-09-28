@@ -3535,8 +3535,7 @@ static int fastrpc_channel_open(struct fastrpc_file *fl)
 		if (fastrpc_mmap_remove_ssr(fl, 1))
 			pr_err("adsprpc: %s: SSR: Failed to unmap remote heap for %s\n",
 				__func__, me->channel[cid].name);
-		}
-		mutex_lock(&me->channel[cid].smd_mutex);
+		mutex_unlock(&fl->map_mutex);
 		me->channel[cid].prevssrcount =
 					me->channel[cid].ssrcount;
 	}
