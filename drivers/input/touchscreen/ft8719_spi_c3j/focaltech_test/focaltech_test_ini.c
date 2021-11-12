@@ -716,6 +716,7 @@ static void get_detail_threshold(char *key_name, bool is_prex, int *thr)
 
 static int init_node_valid(void)
 {
+<<<<<<< HEAD
 	char str[MAX_KEYWORD_NAME_LEN] = {0};
 	int i = 0;
 	int j = 0;
@@ -757,6 +758,49 @@ static int init_node_valid(void)
 	print_buffer(tdata->node_valid, tdata->node.node_num, tdata->node.rx_num);
 	print_buffer(tdata->node_valid_sc, tdata->sc_node.node_num, tdata->sc_node.rx_num);
 	return 0;
+=======
+    char str[MAX_KEYWORD_NAME_LEN] = {0};
+    int i = 0;
+    int j = 0;
+    int chy = 0;
+    int node_num = 0;
+    int cnt = 0;
+    struct fts_test *tdata = fts_ftest;
+
+    if (!tdata || !tdata->node_valid || !tdata->node_valid_sc) {
+        FTS_TEST_ERROR("tdata/node_valid/node_valid_sc is null");
+        return -EINVAL;
+    }
+
+    chy = tdata->node.rx_num;
+    node_num = tdata->node.node_num;
+    fts_init_buffer(tdata->node_valid, 1 , node_num, false, 0, 0);
+    if ((tdata->func->hwtype == IC_HW_INCELL) || (tdata->func->hwtype == IC_HW_MC_SC)) {
+        for (cnt = 0; cnt < node_num; cnt++) {
+            i = cnt / chy + 1;
+            j = cnt % chy + 1;
+            snprintf(str, sizeof(str), "InvalidNode[%d][%d]", i, j);
+            get_keyword_value("INVALID_NODE", str, &tdata->node_valid[cnt]);
+        }
+    }
+
+    if (tdata->func->hwtype == IC_HW_MC_SC) {
+        chy = tdata->sc_node.rx_num;
+        node_num = tdata->sc_node.node_num;
+        fts_init_buffer(tdata->node_valid_sc, 1, node_num, false, 0, 0);
+
+        for (cnt = 0; cnt < node_num; cnt++) {
+            i = (cnt >= chy) ? 2 : 1;
+            j = (cnt >= chy) ? (cnt - chy + 1) : (cnt + 1);
+            snprintf(str, sizeof(str), "InvalidNodeS[%d][%d]", i, j);
+            get_keyword_value("INVALID_NODES", str, &tdata->node_valid_sc[cnt]);
+        }
+    }
+
+    print_buffer(tdata->node_valid, tdata->node.node_num, tdata->node.rx_num);
+    print_buffer(tdata->node_valid_sc, tdata->sc_node.node_num, tdata->sc_node.rx_num);
+    return 0;
+>>>>>>> d815e30f0f67... nt36xxx/ft8719: Fix snprintf warnings
 }
 
 /* incell */

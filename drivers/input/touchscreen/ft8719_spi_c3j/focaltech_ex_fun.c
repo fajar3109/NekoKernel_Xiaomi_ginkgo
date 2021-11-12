@@ -128,70 +128,70 @@ static ssize_t fts_debug_write(
 #if FTS_ESDCHECK_EN
 			fts_esdcheck_switch(DISABLE);
 #endif
-		}
-		break;
+        }
+        break;
 
-	case PROC_READ_REGISTER:
-		proc->cmd[0] = writebuf[1];
-		break;
+    case PROC_READ_REGISTER:
+        proc->cmd[0] = writebuf[1];
+        break;
 
-	case PROC_WRITE_REGISTER:
-		ret = fts_write_reg(writebuf[1], writebuf[2]);
-		if (ret < 0) {
-			FTS_ERROR("PROC_WRITE_REGISTER write error");
-			goto proc_write_err;
-		}
-		break;
+    case PROC_WRITE_REGISTER:
+        ret = fts_write_reg(writebuf[1], writebuf[2]);
+        if (ret < 0) {
+            FTS_ERROR("PROC_WRITE_REGISTER write error");
+            goto proc_write_err;
+        }
+        break;
 
-	case PROC_READ_DATA:
-		writelen = buflen - 1;
-		memcpy(proc->cmd, writebuf + 1, writelen);
-		proc->cmd_len = writelen;
-		break;
+    case PROC_READ_DATA:
+        writelen = buflen - 1;
+        memcpy(proc->cmd, writebuf + 1, writelen);
+        proc->cmd_len = writelen;
+        break;
 
-	case PROC_WRITE_DATA:
-		writelen = buflen - 1;
-		ret = fts_write(writebuf + 1, writelen);
-		if (ret < 0) {
-			FTS_ERROR("PROC_WRITE_DATA write error");
-			goto proc_write_err;
-		}
-		break;
+    case PROC_WRITE_DATA:
+        writelen = buflen - 1;
+        ret = fts_write(writebuf + 1, writelen);
+        if (ret < 0) {
+            FTS_ERROR("PROC_WRITE_DATA write error");
+            goto proc_write_err;
+        }
+        break;
 
-	case PROC_SET_SLAVE_ADDR:
-		break;
+    case PROC_SET_SLAVE_ADDR:
+        break;
 
-	case PROC_HW_RESET:
-		snprintf(tmp, PAGE_SIZE, "%s", writebuf + 1);
-		tmp[buflen - 1] = '\0';
-		if (strncmp(tmp, "focal_driver", 12) == 0) {
-			FTS_INFO("APK execute HW Reset");
-			fts_reset_proc(0);
-		}
-		break;
+    case PROC_HW_RESET:
+        snprintf(tmp, sizeof(tmp), "%s", writebuf + 1);
+        tmp[buflen - 1] = '\0';
+        if (strncmp(tmp, "focal_driver", 12) == 0) {
+            FTS_INFO("APK execute HW Reset");
+            fts_reset_proc(0);
+        }
+        break;
 
-	case PROC_SET_BOOT_MODE:
-		FTS_DEBUG("[APK]: PROC_SET_BOOT_MODE = %x", writebuf[1]);
-		if (0 == writebuf[1]) {
-			ts_data->fw_is_running = true;
-		} else {
-			ts_data->fw_is_running = false;
-		}
-		break;
-	case PROC_ENTER_TEST_ENVIRONMENT:
-		FTS_DEBUG("[APK]: PROC_ENTER_TEST_ENVIRONMENT = %x", writebuf[1]);
-		if (0 == writebuf[1]) {
-			fts_enter_test_environment(0);
-		} else {
-			fts_enter_test_environment(1);
-		}
-		break;
+    case PROC_SET_BOOT_MODE:
+        FTS_DEBUG("[APK]: PROC_SET_BOOT_MODE = %x", writebuf[1]);
+        if (0 == writebuf[1]) {
+            ts_data->fw_is_running = true;
+        } else {
+            ts_data->fw_is_running = false;
+        }
+        break;
+    case PROC_ENTER_TEST_ENVIRONMENT:
+        FTS_DEBUG("[APK]: PROC_ENTER_TEST_ENVIRONMENT = %x", writebuf[1]);
+        if (0 == writebuf[1]) {
+            fts_enter_test_environment(0);
+        } else {
+            fts_enter_test_environment(1);
+        }
+        break;
 
-	default:
-		break;
-	}
+    default:
+        break;
+    }
 
-	ret = buflen;
+    ret = buflen;
 proc_write_err:
 	if ((buflen > PROC_BUF_SIZE) && writebuf) {
 		kfree(writebuf);
@@ -876,23 +876,23 @@ static ssize_t fts_fwupgradebin_store(
 	struct device *dev,
 	struct device_attribute *attr, const char *buf, size_t count)
 {
-	char fwname[FILE_NAME_LENGTH] = { 0 };
-	struct input_dev *input_dev = fts_data->input_dev;
+    char fwname[FILE_NAME_LENGTH] = { 0 };
+    struct input_dev *input_dev = fts_data->input_dev;
 
-	if ((count <= 1) || (count >= FILE_NAME_LENGTH - 32)) {
-		FTS_ERROR("fw bin name's length(%d) fail", (int)count);
-		return -EINVAL;
-	}
-	memset(fwname, 0, sizeof(fwname));
-	snprintf(fwname, PAGE_SIZE, "%s", buf);
-	fwname[count - 1] = '\0';
+    if ((count <= 1) || (count >= FILE_NAME_LENGTH - 32)) {
+        FTS_ERROR("fw bin name's length(%d) fail", (int)count);
+        return -EINVAL;
+    }
+    memset(fwname, 0, sizeof(fwname));
+    snprintf(fwname, sizeof(fwname), "%s", buf);
+    fwname[count - 1] = '\0';
 
-	FTS_INFO("upgrade with bin file through sysfs node");
-	mutex_lock(&input_dev->mutex);
-	fts_upgrade_bin(fwname, 0);
-	mutex_unlock(&input_dev->mutex);
+    FTS_INFO("upgrade with bin file through sysfs node");
+    mutex_lock(&input_dev->mutex);
+    fts_upgrade_bin(fwname, 0);
+    mutex_unlock(&input_dev->mutex);
 
-	return count;
+    return count;
 }
 
 /* fts_force_upgrade interface */
@@ -906,23 +906,23 @@ static ssize_t fts_fwforceupg_store(
 	struct device *dev,
 	struct device_attribute *attr, const char *buf, size_t count)
 {
-	char fwname[FILE_NAME_LENGTH];
-	struct input_dev *input_dev = fts_data->input_dev;
+    char fwname[FILE_NAME_LENGTH];
+    struct input_dev *input_dev = fts_data->input_dev;
 
-	if ((count <= 1) || (count >= FILE_NAME_LENGTH - 32)) {
-		FTS_ERROR("fw bin name's length(%d) fail", (int)count);
-		return -EINVAL;
-	}
-	memset(fwname, 0, sizeof(fwname));
-	snprintf(fwname, PAGE_SIZE, "%s", buf);
-	fwname[count - 1] = '\0';
+    if ((count <= 1) || (count >= FILE_NAME_LENGTH - 32)) {
+        FTS_ERROR("fw bin name's length(%d) fail", (int)count);
+        return -EINVAL;
+    }
+    memset(fwname, 0, sizeof(fwname));
+    snprintf(fwname, sizeof(fwname), "%s", buf);
+    fwname[count - 1] = '\0';
 
-	FTS_INFO("force upgrade through sysfs node");
-	mutex_lock(&input_dev->mutex);
-	fts_upgrade_bin(fwname, 1);
-	mutex_unlock(&input_dev->mutex);
+    FTS_INFO("force upgrade through sysfs node");
+    mutex_lock(&input_dev->mutex);
+    fts_upgrade_bin(fwname, 1);
+    mutex_unlock(&input_dev->mutex);
 
-	return count;
+    return count;
 }
 
 /* fts_driver_info interface */
