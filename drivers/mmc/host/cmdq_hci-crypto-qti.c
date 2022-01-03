@@ -129,7 +129,7 @@ static int cmdq_crypto_qti_keyslot_program(struct keyslot_manager *ksm,
 	if (err)
 		pr_err("%s: failed with error %d\n", __func__, err);
 
-	mmc_host_clk_release(mmc_host);
+	mmc_host_clk_release(host->mmc);
 
 	return err;
 }
@@ -149,14 +149,13 @@ static int cmdq_crypto_qti_keyslot_evict(struct keyslot_manager *ksm,
 
 	mmc_host_clk_hold(host->mmc);
 
-
 	err = crypto_qti_keyslot_evict(host->crypto_vops->priv, slot);
 	if (err) {
 		pr_err("%s: failed with error %d\n", __func__, err);
-		mmc_host_clk_release(mmc_host);
+		mmc_host_clk_release(host->mmc);
 		return err;
 	}
-	mmc_host_clk_release(mmc_host);
+	mmc_host_clk_release(host->mmc);
 
 	val = atomic_read(&keycache) & ~(1 << slot);
 	atomic_set(&keycache, val);
