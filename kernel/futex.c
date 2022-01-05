@@ -2587,20 +2587,7 @@ handle_err:
 	raw_spin_unlock_irq(&pi_state->pi_mutex.wait_lock);
 	spin_unlock(q->lock_ptr);
 
-	switch (err) {
-	case -EFAULT:
-		err = fault_in_user_writeable(uaddr);
-		break;
-
-	case -EAGAIN:
-		cond_resched();
-		err = 0;
-		break;
-
-	default:
-		WARN_ON_ONCE(1);
-		break;
-	}
+	err = fault_in_user_writeable(uaddr);
 
 	spin_lock(q->lock_ptr);
 	raw_spin_lock_irq(&pi_state->pi_mutex.wait_lock);
@@ -2921,7 +2908,6 @@ static int futex_lock_pi(u32 __user *uaddr, unsigned int flags,
 			 ktime_t *time, int trylock)
 {
 	struct hrtimer_sleeper timeout, *to = NULL;
-	struct task_struct *exiting = NULL;
 	struct rt_mutex_waiter rt_waiter;
 	struct futex_hash_bucket *hb;
 	struct futex_q q = futex_q_init;
