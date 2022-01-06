@@ -414,12 +414,7 @@ static struct avc_xperms_node *avc_xperms_alloc(void)
 {
 	struct avc_xperms_node *xp_node;
 
-<<<<<<< HEAD
-	xp_node = kmem_cache_zalloc(avc_xperms_cachep,
-			GFP_NOWAIT | __GFP_NOWARN);
-=======
 	xp_node = kmem_cache_zalloc(avc_xperms_cachep, GFP_NOWAIT | __GFP_NOWARN);
->>>>>>> 8c7c098b0c38516ce8887fea977bd600a6f5c184
 	if (!xp_node)
 		return xp_node;
 	INIT_LIST_HEAD(&xp_node->xpd_head);
