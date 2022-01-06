@@ -47,11 +47,8 @@
 #include <soc/qcom/ramdump.h>
 #include <linux/debugfs.h>
 #include <linux/pm_qos.h>
-<<<<<<< HEAD
 #include <linux/cpumask.h>
-=======
 #include <linux/stat.h>
->>>>>>> 2f41753412bea71d72a45eb26bbdcaf7a8337710
 
 #define TZ_PIL_PROTECT_MEM_SUBSYS_ID 0x0C
 #define TZ_PIL_CLEAR_PROTECT_MEM_SUBSYS_ID 0x0D

@@ -653,7 +653,6 @@ static int dsi_panel_wled_register(struct dsi_panel *panel,
 
 extern int sgm_brightness_set(uint16_t brightness);
 extern int backlight_hbm_set(int hbm_mode);
-#endif
 static int dsi_panel_update_backlight(struct dsi_panel *panel,
 	u32 bl_lvl)
 {
