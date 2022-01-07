@@ -944,7 +944,8 @@ static ssize_t fuse_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
 			return err;
 	}
 
-gi(ff->passthrough.filp)
+
+	if (ff->passthrough.filp)
 		ret_val = fuse_passthrough_read_iter(iocb, to);
 	else if (ff && ff->rw_lower_file)
 		ret_val = fuse_shortcircuit_read_iter(iocb, to);
