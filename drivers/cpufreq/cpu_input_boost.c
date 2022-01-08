@@ -5,7 +5,6 @@
 
 #define pr_fmt(fmt) "cpu_input_boost: " fmt
 
-#include <linux/battery_saver.h>
 #include <linux/cpu.h>
 #include <linux/cpufreq.h>
 #include <linux/msm_drm_notify.h>
@@ -94,7 +93,7 @@ bool cpu_input_boost_within_input(unsigned long timeout_ms)
 
 static void __cpu_input_boost_kick(struct boost_drv *b)
 {
-	if (test_bit(SCREEN_OFF, &b->state) || is_battery_saver_on())
+	if (test_bit(SCREEN_OFF, &b->state))
 		return;
 
 	set_bit(INPUT_BOOST, &b->state);
