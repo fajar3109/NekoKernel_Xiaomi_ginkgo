@@ -2234,6 +2234,7 @@ static int selinux_binder_transfer_binder(const struct cred *from,
 {
 	return avc_has_perm(&selinux_state,
 			    cred_sid(from), cred_sid(to),
+			    SECCLASS_BINDER, BINDER__TRANSFER,
 			    NULL);
 }
 
@@ -5480,7 +5481,7 @@ static unsigned int selinux_ip_postroute_compat(struct sk_buff *skb,
 	struct common_audit_data ad;
 	struct lsm_network_audit net = {0,};
 	char *addrp;
-	u8 proto = 0;
+	u8 proto;
 
 	if (sk == NULL)
 		return NF_ACCEPT;
