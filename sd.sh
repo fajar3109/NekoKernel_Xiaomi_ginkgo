@@ -4,7 +4,7 @@
 # Copyright (C) 2020-2021 Adithya R.
 
 SECONDS=0 # builtin bash timer
-ZIPNAME="xontolkernul-MiuiQ-4.14.261-ginkgo-$(date '+%Y%m%d-%H%M').zip"
+ZIPNAME="xontolkernul-MiuiQ-4.14.262-ginkgo-$(date '+%Y%m%d-%H%M').zip"
 SDC_DIR="/workspace/Gitpod-Workspaces/sdc-clang"
 GCC_DIR="/workspace/Gitpod-Workspaces/gccZ"
 GCC64_DIR="/workspace/Gitpod-Workspaces/gcc64Z"
