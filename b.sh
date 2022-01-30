@@ -1,8 +1,8 @@
 SECONDS=0 # builtin bash timer
 ZIPNAME="GabutKernel-MiuiR-4.14.264-ginkgo-$(date '+%Y%m%d-%H%M').zip"
-SDC_DIR="/workspace/Gitpod-Workspaces/sdc-clang"
-GCC_DIR="/workspace/Gitpod-Workspaces/gccZ"
-GCC64_DIR="/workspace/Gitpod-Workspaces/gcc64Z"
+SDC_DIR="/workspace/sdc-clang"
+GCC_DIR="/workspace/gccZ"
+GCC64_DIR="/workspace/gcc64Z"
 AK3_DIR="$HOME/android/AnyKernel3"
 DEFCONFIG="vendor/ginkgo-perf_defconfig"
 
