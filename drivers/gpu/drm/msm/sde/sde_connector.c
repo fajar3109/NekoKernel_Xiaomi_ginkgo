@@ -1144,7 +1144,7 @@ static int sde_connector_atomic_set_property(struct drm_connector *connector,
 	idx = msm_property_index(&c_conn->property_info, property);
 	switch (idx) {
 #ifdef CONFIG_MACH_XIAOMI_TRINKET
-	case CONNECTOR_PROPg_LP:
+	case CONNECTOR_PROP_LP:
 		if ((strnstr(saved_command_line, "tianma", strlen(saved_command_line)) != NULL) ||
 		    (strnstr(saved_command_line, "shenchao", strlen(saved_command_line)) != NULL)) {
 			if (connector->dev)
