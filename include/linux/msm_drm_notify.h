@@ -42,11 +42,4 @@ struct msm_drm_notifier {
 
 int msm_drm_register_client(struct notifier_block *nb);
 int msm_drm_unregister_client(struct notifier_block *nb);
-int msm_drm_notifier_call_chain(unsigned long val, void *v);
-#ifdef CONFIG_MACH_XIAOMI_TRINKET
-int drm_register_client(struct notifier_block *nb);
-int drm_unregister_client(struct notifier_block *nb);
-int drm_notifier_call_chain(unsigned long val, void *v);
-#endif
-
 #endif
