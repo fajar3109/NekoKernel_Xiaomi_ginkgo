@@ -222,7 +222,6 @@ struct dsi_panel {
 
 #ifdef CONFIG_MACH_XIAOMI_GINKGO
 	int hbm_mode;
-	int cabc_mode;
 #endif
 };
 
@@ -348,8 +347,6 @@ void dsi_panel_ext_bridge_put(struct dsi_panel *panel);
 
 #ifdef CONFIG_MACH_XIAOMI_GINKGO
 int dsi_panel_apply_hbm_mode(struct dsi_panel *panel);
-
-int dsi_panel_apply_cabc_mode(struct dsi_panel *panel);
 #endif
 
 #endif /* _DSI_PANEL_H_ */
