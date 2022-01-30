@@ -17,8 +17,6 @@
 #define pr_fmt(fmt)	"dsi-drm:[%s] " fmt, __func__
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_atomic.h>
-#ifdef CONFIG_MACH_XIAOMI_TRINKET
-#include <linux/msm_drm_notify.h>
 #include <drm/drm_bridge.h>
 #include <linux/pm_wakeup.h>
 
@@ -49,12 +47,6 @@ struct dsi_bridge *gbridge;
 static struct delayed_work prim_panel_work;
 static atomic_t prim_panel_is_on;
 static struct wakeup_source prim_panel_wakelock;
-
-bool panel_init_judge;
-
-struct msm_drm_notifier g_notify_data;
-extern char *saved_command_line;
-#endif
 
 static void convert_to_dsi_mode(const struct drm_display_mode *drm_mode,
 				struct dsi_display_mode *dsi_mode)
@@ -190,21 +182,6 @@ static void dsi_bridge_pre_enable(struct drm_bridge *bridge)
 {
 	int rc = 0;
 	struct dsi_bridge *c_bridge = to_dsi_bridge(bridge);
-#ifdef CONFIG_MACH_XIAOMI_TRINKET
-	struct drm_device *dev = bridge->dev;
-	int event = 0;
-
-	if ((strnstr(saved_command_line, "tianma", strlen(saved_command_line)) != NULL) || 
-	    (strnstr(saved_command_line, "shenchao", strlen(saved_command_line)) != NULL)) {
-		if (dev->doze_state == MSM_DRM_BLANK_POWERDOWN) {
-			dev->doze_state = MSM_DRM_BLANK_UNBLANK;
-			pr_err("%s power on from power off\n", __func__);
-		}
-
-		event = dev->doze_state;
-		g_notify_data.data = &event;
-	}
-#endif
 
 	if (!bridge) {
 		pr_err("Invalid params\n");
@@ -223,11 +200,6 @@ static void dsi_bridge_pre_enable(struct drm_bridge *bridge)
 		__pm_relax(&prim_panel_wakelock);
 		return;
 	}
-
-	if ((strnstr(saved_command_line, "tianma", strlen(saved_command_line)) != NULL) || 
-	    (strnstr(saved_command_line, "shenchao", strlen(saved_command_line)) != NULL))
-		msm_drm_notifier_call_chain(MSM_DRM_EARLY_EVENT_BLANK, &g_notify_data);
-#endif
 
 	/* By this point mode should have been validated through mode_fixup */
 	rc = dsi_display_set_mode(c_bridge->display,
@@ -262,11 +234,6 @@ static void dsi_bridge_pre_enable(struct drm_bridge *bridge)
 				c_bridge->id, rc);
 		(void)dsi_display_unprepare(c_bridge->display);
 	}
-#ifdef CONFIG_MACH_XIAOMI_TRINKET
-	if ((strnstr(saved_command_line, "tianma", strlen(saved_command_line)) != NULL) || 
-	    (strnstr(saved_command_line, "shenchao", strlen(saved_command_line)) != NULL))
-		msm_drm_notifier_call_chain(MSM_DRM_EVENT_BLANK, &g_notify_data);
-#endif
 	SDE_ATRACE_END("dsi_display_enable");
 
 	rc = dsi_display_splash_res_cleanup(c_bridge->display);
@@ -385,31 +352,11 @@ static void dsi_bridge_post_disable(struct drm_bridge *bridge)
 {
 	int rc = 0;
 	struct dsi_bridge *c_bridge = to_dsi_bridge(bridge);
-#ifdef CONFIG_MACH_XIAOMI_TRINKET
-	struct drm_device *dev = bridge->dev;
-	int event = 0;
-	if ((strnstr(saved_command_line, "tianma", strlen(saved_command_line)) != NULL) || 
-	    (strnstr(saved_command_line, "shenchao", strlen(saved_command_line)) != NULL)) {
-		if (dev->doze_state == MSM_DRM_BLANK_UNBLANK) {
-			dev->doze_state = MSM_DRM_BLANK_POWERDOWN;
-			pr_err("%s wrong doze state\n", __func__);
-		}
-
-		event = dev->doze_state;
-		g_notify_data.data = &event;
-	}
-#endif
 
 	if (!bridge) {
 		pr_err("Invalid params\n");
 		return;
 	}
-
-#ifdef CONFIG_MACH_XIAOMI_TRINKET
-	if ((strnstr(saved_command_line, "tianma", strlen(saved_command_line)) != NULL) || 
-	    (strnstr(saved_command_line, "shenchao", strlen(saved_command_line)) != NULL))
-		msm_drm_notifier_call_chain(MSM_DRM_EARLY_EVENT_BLANK, &g_notify_data);
-#endif
 
 	SDE_ATRACE_BEGIN("dsi_bridge_post_disable");
 	SDE_ATRACE_BEGIN("dsi_display_disable");
@@ -430,11 +377,6 @@ static void dsi_bridge_post_disable(struct drm_bridge *bridge)
 		return;
 	}
 	SDE_ATRACE_END("dsi_bridge_post_disable");
-
-#ifdef CONFIG_MACH_XIAOMI_TRINKET
-	if ((strnstr(saved_command_line, "tianma", strlen(saved_command_line)) != NULL) || 
-	    (strnstr(saved_command_line, "shenchao", strlen(saved_command_line)) != NULL))
-		msm_drm_notifier_call_chain(MSM_DRM_EVENT_BLANK, &g_notify_data);
 
 	if (c_bridge->display->is_prim_display)
 		atomic_set(&prim_panel_is_on, false);

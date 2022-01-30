@@ -1164,11 +1164,6 @@ int dsi_display_set_power(struct drm_connector *connector,
 {
 	struct dsi_display *display = disp;
 	int rc = 0;
-#ifdef CONFIG_MACH_XIAOMI_TRINKET
-	struct msm_drm_notifier g_notify_data;
-	struct drm_device *dev = NULL;
-	int event = 0;
-#endif
 
 	if (!display || !display->panel) {
 		pr_err("invalid display/panel\n");
@@ -1177,46 +1172,15 @@ int dsi_display_set_power(struct drm_connector *connector,
 
 	switch (power_mode) {
 	case SDE_MODE_DPMS_LP1:
-#ifdef CONFIG_MACH_XIAOMI_TRINKET
-		if ((strnstr(saved_command_line, "tianma", strlen(saved_command_line)) != NULL) || 
-		    (strnstr(saved_command_line, "shenchao", strlen(saved_command_line)) != NULL))
-			msm_drm_notifier_call_chain(MSM_DRM_EARLY_EVENT_BLANK, &g_notify_data);
-#endif
 		rc = dsi_panel_set_lp1(display->panel);
-#ifdef CONFIG_MACH_XIAOMI_GINKGO
-		if ((strnstr(saved_command_line, "tianma", strlen(saved_command_line)) != NULL) || 
-		    (strnstr(saved_command_line, "shenchao", strlen(saved_command_line)) != NULL))
-			msm_drm_notifier_call_chain(MSM_DRM_EVENT_BLANK, &g_notify_data);
-#endif
 		break;
 	case SDE_MODE_DPMS_LP2:
-#ifdef CONFIG_MACH_XIAOMI_GINKGO
-		if ((strnstr(saved_command_line, "tianma", strlen(saved_command_line)) != NULL) || 
-		    (strnstr(saved_command_line, "shenchao", strlen(saved_command_line)) != NULL))
-			msm_drm_notifier_call_chain(MSM_DRM_EARLY_EVENT_BLANK, &g_notify_data);
-#endif
 		rc = dsi_panel_set_lp2(display->panel);
-#ifdef CONFIG_MACH_XIAOMI_GINKGO
-		if ((strnstr(saved_command_line, "tianma", strlen(saved_command_line)) != NULL) || 
-		    (strnstr(saved_command_line, "shenchao", strlen(saved_command_line)) != NULL))
-			msm_drm_notifier_call_chain(MSM_DRM_EVENT_BLANK, &g_notify_data);
-#endif
 		break;
 	case SDE_MODE_DPMS_ON:
 		if (display->panel->power_mode == SDE_MODE_DPMS_LP1 ||
-			display->panel->power_mode == SDE_MODE_DPMS_LP2) {
-#ifdef CONFIG_MACH_XIAOMI_GINKGO
-			if ((strnstr(saved_command_line, "tianma", strlen(saved_command_line)) != NULL) || 
-			    (strnstr(saved_command_line, "shenchao", strlen(saved_command_line)) != NULL))
-				msm_drm_notifier_call_chain(MSM_DRM_EARLY_EVENT_BLANK, &g_notify_data);
-#endif
+			display->panel->power_mode == SDE_MODE_DPMS_LP2)
 			rc = dsi_panel_set_nolp(display->panel);
-#ifdef CONFIG_MACH_XIAOMI_GINKGO
-			if ((strnstr(saved_command_line, "tianma", strlen(saved_command_line)) != NULL) || 
-			    (strnstr(saved_command_line, "shenchao", strlen(saved_command_line)) != NULL))
-				msm_drm_notifier_call_chain(MSM_DRM_EVENT_BLANK, &g_notify_data);
-#endif
-		}
 		break;
 	case SDE_MODE_DPMS_OFF:
 	default:
