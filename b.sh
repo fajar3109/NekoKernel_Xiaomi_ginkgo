@@ -1,21 +1,21 @@
 SECONDS=0 # builtin bash timer
-ZIPNAME="xontolkernul-MiuiQ-4.14.250-ginkgo-$(date '+%Y%m%d-%H%M').zip"
-TC_DIR="/workspace/Gitpod-Workspaces/proton"
+ZIPNAME="xontolkernul-MiuiQ-4.14.272-ginkgo-$(date '+%Y%m%d-%H%M').zip"
+TC_DIR="/workspace/Gitpod-Workspaces/clang"
 AK3_DIR="/workspace/Gitpod-Workspaces/AnyKernel3"
 DEFCONFIG="vendor/ginkgo-perf_defconfig"
 
 export PATH="$TC_DIR/bin:$PATH"
 
 if ! [ -d "$TC_DIR" ]; then
-echo "Proton clang not found! Cloning to $TC_DIR..."
-if ! git clone -q --depth=1 https://github.com/kdrag0n/proton-clang $TC_DIR; then
+echo "NusantaraDevs clang not found! Cloning to $TC_DIR..."
+if ! git clone -b dev/12.0 --depth=1 https://github.com/NusantaraDevs/clang $TC_DIR; then
 echo "Cloning failed! Aborting..."
 exit 1
 fi
 fi
 
 export KBUILD_BUILD_USER=fajar
-export KBUILD_BUILD_HOST=gipodworkspaces
+export KBUILD_BUILD_HOST=gitpod
 
 if [[ $1 = "-r" || $1 = "--regen" ]]; then
 make O=out ARCH=arm64 $DEFCONFIG savedefconfig
@@ -37,7 +37,7 @@ if [ -f "out/arch/arm64/boot/Image.gz-dtb" ]; then
 echo -e "\nKernel compiled succesfully! Zipping up...\n"
 if [ -d "$AK3_DIR" ]; then
 cp -r $AK3_DIR AnyKernel3
-elif ! git clone -q https://github.com/fajar3109/AnyKernel3; then
+elif ! git clone -q -b xontol https://github.com/fajar3109/AnyKernel3; then
 echo -e "\nAnyKernel3 repo not found locally and cloning failed! Aborting..."
 exit 1
 fi
@@ -48,6 +48,7 @@ git checkout master &> /dev/null
 zip -r9 "../$ZIPNAME" * -x '*.git*' README.md *placeholder
 cd ..
 rm -rf AnyKernel3
+rm -rf out/arch/arm64/boot
 echo -e "\nCompleted in $((SECONDS / 60)) minute(s) and $((SECONDS % 60)) second(s) !"
 echo "Zip: $ZIPNAME"
 if ! [[ $HOSTNAME = "gitpod" && $USER = "fajar" ]]; then
