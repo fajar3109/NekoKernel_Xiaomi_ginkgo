@@ -1,5 +1,5 @@
 SECONDS=0 # builtin bash timer
-ZIPNAME="xontolkernul-MiuiQ-4.14.272-ginkgo-$(date '+%Y%m%d-%H%M').zip"
+ZIPNAME="NekoKernel-A10-Miui-4.14.274-ginkgo-$(date '+%Y%m%d-%H%M').zip"
 TC_DIR="/workspace/Gitpod-Workspaces/clang"
 AK3_DIR="/workspace/Gitpod-Workspaces/AnyKernel3"
 DEFCONFIG="vendor/ginkgo-perf_defconfig"
