@@ -1,14 +1,14 @@
 SECONDS=0 # builtin bash timer
 ZIPNAME="NekoKernel-3.2-A10-Ginklow-$(date '+%Y%m%d-%H%M').zip"
-TC_DIR="/workspace/Gitpod-Workspaces/clang"
+TC_DIR="/workspace/Gitpod-Workspaces/protonclang"
 AK3_DIR="/workspace/Gitpod-Workspaces/AnyKernel3"
 DEFCONFIG="vendor/ginkgo-perf_defconfig"
 
 export PATH="$TC_DIR/bin:$PATH"
 
 if ! [ -d "$TC_DIR" ]; then
-echo "NusantaraDevs clang not found! Cloning to $TC_DIR..."
-if ! git clone -b dev/12.0 --depth=1 https://github.com/NusantaraDevs/clang $TC_DIR; then
+echo "Proton clang not found! Cloning to $TC_DIR..."
+if ! git clone -q --depth=1 https://github.com/kdrag0n/proton-clang $TC_DIR; then
 echo "Cloning failed! Aborting..."
 exit 1
 fi
@@ -45,7 +45,6 @@ cp out/arch/arm64/boot/Image.gz-dtb AnyKernel3
 cp out/arch/arm64/boot/dtbo.img AnyKernel3
 rm -f *zip
 cd AnyKernel3
-git checkout master &> /dev/null
 zip -r9 "../$ZIPNAME" * -x '*.git*' README.md *placeholder
 cd ..
 rm -rf AnyKernel3
