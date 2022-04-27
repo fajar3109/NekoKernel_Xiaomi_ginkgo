@@ -1,5 +1,5 @@
 SECONDS=0 # builtin bash timer
-ZIPNAME="NekoKernel-3.2-A10-Ginklow-$(date '+%Y%m%d-%H%M').zip"
+ZIPNAME="NekoKernel-3.3-A10-Ginklow-$(date '+%Y%m%d-%H%M').zip"
 TC_DIR="/workspace/Gitpod-Workspaces/protonclang"
 AK3_DIR="/workspace/Gitpod-Workspaces/AnyKernel3"
 DEFCONFIG="vendor/ginkgo-perf_defconfig"
@@ -37,7 +37,7 @@ if [ -f "out/arch/arm64/boot/Image.gz-dtb" ] && [ -f "out/arch/arm64/boot/dtbo.i
 echo -e "\nKernel compiled succesfully! Zipping up...\n"
 if [ -d "$AK3_DIR" ]; then
 cp -r $AK3_DIR AnyKernel3
-elif ! git clone -q -b NekoKernel https://github.com/fajar3109/AnyKernel3; then
+elif ! git clone -q -b Neko https://github.com/fajar3109/AnyKernel3; then
 echo -e "\nAnyKernel3 repo not found locally and cloning failed! Aborting..."
 exit 1
 fi
