@@ -774,6 +774,7 @@ static int snd_pcm_hw_params(struct snd_pcm_substream *substream,
 
 		pm_qos_add_request(&substream->latency_pm_qos_req,
 				   PM_QOS_CPU_DMA_LATENCY, usecs);
+	}
 	err = 0;
  _error:
 	if (err) {
